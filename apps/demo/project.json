@@ -1,9 +1,13 @@
 {
   "name": "demo",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "prefix": "app",
+  "projectType": "application",
+  "sourceRoot": "apps/demo/src",
+  "generators": {},
   "targets": {
     "build": {
-      "executor": "@angular/build:application",
+      "executor": "@nx/angular:webpack-browser",
       "configurations": {
         "development": {
           "extractLicenses": false,
@@ -17,23 +21,29 @@
           "namedChunks": false,
           "optimization": true,
           "outputHashing": "all",
-          "sourceMap": false
+          "sourceMap": false,
+          "customWebpackConfig": {
+            "path": "apps/demo/webpack.prod.config.ts"
+          }
         }
       },
       "options": {
         "assets": [],
         "index": "apps/demo/src/index.html",
-        "browser": "apps/demo/src/main.ts",
+        "main": "apps/demo/src/main.ts",
         "outputPath": "dist/apps/demo",
         "polyfills": ["zone.js"],
         "scripts": [],
         "styles": ["apps/demo/src/global_styles.css"],
-        "tsConfig": "apps/demo/tsconfig.app.json"
+        "tsConfig": "apps/demo/tsconfig.app.json",
+        "customWebpackConfig": {
+          "path": "apps/demo/webpack.config.ts"
+        }
       },
       "outputs": ["{options.outputPath}"]
     },
     "serve": {
-      "executor": "@angular/build:dev-server",
+      "executor": "@nx/angular:dev-server",
       "configurations": {
         "development": {
           "buildTarget": "demo:build:development"
@@ -42,11 +52,27 @@
           "buildTarget": "demo:build:production"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "options": {
+        "publicHost": "http://localhost:4200"
+      }
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "buildTarget": "demo:build",
+        "watch": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "demo:build:development"
+        },
+        "production": {
+          "buildTarget": "demo:build:production"
+        }
+      }
     }
-  },
-  "prefix": "app",
-  "projectType": "application",
-  "generators": {},
-  "sourceRoot": "apps/demo/src"
+  }
 }

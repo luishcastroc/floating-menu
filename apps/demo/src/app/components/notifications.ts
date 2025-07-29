@@ -100,7 +100,7 @@ import { Component } from '@angular/core';
     `,
   ],
 })
-export class NotificationsComponent {
+export class Notifications {
   notifications = [
     {
       icon: '✅',

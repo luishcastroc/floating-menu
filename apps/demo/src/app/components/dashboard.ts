@@ -81,7 +81,7 @@ import { Component } from '@angular/core';
     `,
   ],
 })
-export class DashboardComponent {
+export class Dashboard {
   stats = [
     { icon: '📈', value: '2,847', label: 'Total Views' },
     { icon: '👥', value: '1,234', label: 'Active Users' },

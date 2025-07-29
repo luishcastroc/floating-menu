@@ -39,6 +39,7 @@ interface MenuItem {
         class="menu-button"
         (click)="toggleMenu($event)"
         [class.active]="isExpanded()"
+        [class.open-left]="openToLeft()"
       >
         <div class="hamburger-line" [class.active]="isExpanded()"></div>
         <div class="hamburger-line" [class.active]="isExpanded()"></div>
@@ -47,7 +48,7 @@ interface MenuItem {
 
       <!-- Menu Items -->
       @if (isExpanded()) {
-      <div class="menu-items">
+      <div class="menu-items" [class.open-left]="openToLeft()">
         @for (item of menuItems(); track item.route; let i = $index) {
         <div
           class="menu-item"
@@ -67,9 +68,9 @@ interface MenuItem {
       }
     </div>
   `,
-  styleUrls: ['./draggable-menu.component.css'],
+  styleUrls: ['./draggable-menu.css'],
 })
-export class DraggableMenuComponent {
+export class DraggableMenu {
   private router = inject(Router);
 
   // ViewChild signal
@@ -79,6 +80,7 @@ export class DraggableMenuComponent {
   isExpanded = signal(false);
   isDragging = signal(false);
   position = signal({ x: 20, y: 100 });
+  openToLeft = signal(false);
 
   private dragStart = { x: 0, y: 0 };
   private clickThreshold = 5; // pixels
@@ -91,6 +93,7 @@ export class DraggableMenuComponent {
     { icon: '📊', label: 'Dashboard', route: '/dashboard' },
     { icon: '💬', label: 'Messages', route: '/messages' },
     { icon: '🔔', label: 'Notifications', route: '/notifications' },
+    { icon: '🔗', label: 'NAF Link', route: '/naf-link' },
   ]);
 
   constructor() {
@@ -99,15 +102,6 @@ export class DraggableMenuComponent {
       if (this.menuContainer()) {
         this.centerMenu();
       }
-    });
-  }
-
-  private centerMenu() {
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-    this.position.set({
-      x: windowWidth - 80,
-      y: windowHeight / 2 - 30,
     });
   }
 
@@ -176,7 +170,8 @@ export class DraggableMenuComponent {
   }
 
   onTouchMove(event: TouchEvent) {
-    if (!this.isDragging()) return;
+    const isDragging = this.isDragging();
+    if (!isDragging) return;
 
     const touch = event.touches[0];
     const deltaX = Math.abs(
@@ -217,6 +212,8 @@ export class DraggableMenuComponent {
   }
 
   toggleMenu(event: MouseEvent) {
+    const isDragging = this.isDragging();
+    const isExpanded = this.isExpanded();
     // Don't allow toggle if we just finished dragging
     if (this.dragOccurred) {
       this.dragOccurred = false; // Reset for next interaction
@@ -224,11 +221,17 @@ export class DraggableMenuComponent {
     }
 
     // Don't toggle if currently dragging
-    if (this.isDragging()) {
+    if (isDragging) {
       return;
     }
 
     event.stopPropagation();
+
+    // Calculate menu direction before expanding
+    if (!isExpanded) {
+      this.calculateMenuDirection();
+    }
+
     this.isExpanded.update((expanded) => !expanded);
   }
 
@@ -240,5 +243,29 @@ export class DraggableMenuComponent {
     event.stopPropagation();
     this.router.navigate([route]);
     this.closeMenu();
+  }
+
+  private centerMenu() {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    this.position.set({
+      x: windowWidth - 80,
+      y: windowHeight / 2 - 30,
+    });
+  }
+
+  private calculateMenuDirection() {
+    const menuWidth = 200; // Width of the menu items
+    const menuButtonWidth = 60;
+    const viewportWidth = window.innerWidth;
+    const currentX = this.position().x;
+
+    // Check if opening to the right would cause overflow
+    const wouldOverflowRight = currentX + menuWidth > viewportWidth;
+
+    // Open to the left if it would overflow on the right and there's enough space on the left
+    const hasSpaceOnLeft = currentX >= menuWidth - menuButtonWidth;
+
+    this.openToLeft.set(wouldOverflowRight && hasSpaceOnLeft);
   }
 }

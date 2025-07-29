@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-messages',
@@ -95,7 +95,7 @@ import { CommonModule } from '@angular/common';
     `,
   ],
 })
-export class MessagesComponent {
+export class Messages {
   messages = [
     {
       avatar: '👨‍💼',
