@@ -3,12 +3,31 @@
   z-index: 10000;
   cursor: move;
   user-select: none;
+  transition: transform 300ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.floating-menu.collapsed {
+  transform: scale(1);
+}
+
+.floating-menu.expanded {
+  transform: scale(1.1);
+}
+
+.floating-menu.collapsed .menu-button {
+  border-radius: 50%;
+  transition: border-radius 300ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.floating-menu.expanded .menu-button {
+  border-radius: 20px 20px 0 0;
+  transition: border-radius 300ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 .menu-button {
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #091644 0%, #3b6ccf 100%);
   border-radius: 50%;
   display: flex;
   flex-direction: column;
@@ -19,11 +38,23 @@
   transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   border: 3px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
+  touch-action: none; /* Prevent default touch behaviors */
+  -webkit-touch-callout: none; /* Disable touch callout on iOS */
+  -webkit-user-select: none; /* Disable text selection */
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .menu-button:hover {
   transform: scale(1.05);
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
+.menu-button:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease;
 }
 
 .menu-button.active {
@@ -51,9 +82,7 @@
   transform: rotate(-45deg) translate(7px, -6px);
 }
 
-.expanded .menu-button {
-  border-radius: 20px 20px 0 0;
-}
+
 
 .menu-items {
   position: absolute;

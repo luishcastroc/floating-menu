@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-notifications',
@@ -11,14 +11,16 @@ import { CommonModule } from '@angular/common';
         <h1>🔔 Notifications</h1>
         <p>Stay updated with your latest notifications and alerts.</p>
         <div class="notifications-list">
-          <div class="notification-item" *ngFor="let notification of notifications" [class]="notification.type">
-            <div class="notification-icon">{{ notification.icon }}</div>
-            <div class="notification-content">
-              <h3>{{ notification.title }}</h3>
-              <p>{{ notification.message }}</p>
-              <span class="notification-time">{{ notification.time }}</span>
+          @for (notification of notifications; track notification.title) {
+            <div class="notification-item" [class]="notification.type">
+              <div class="notification-icon">{{ notification.icon }}</div>
+              <div class="notification-content">
+                <h3>{{ notification.title }}</h3>
+                <p>{{ notification.message }}</p>
+                <span class="notification-time">{{ notification.time }}</span>
+              </div>
             </div>
-          </div>
+          }
         </div>
       </div>
     </div>

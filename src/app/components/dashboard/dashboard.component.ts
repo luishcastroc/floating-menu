@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,26 +11,13 @@ import { CommonModule } from '@angular/common';
         <h1>📊 Dashboard</h1>
         <p>Your comprehensive overview and analytics dashboard.</p>
         <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon">📈</div>
-            <div class="stat-value">2,847</div>
-            <div class="stat-label">Total Views</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">👥</div>
-            <div class="stat-value">1,234</div>
-            <div class="stat-label">Active Users</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">💰</div>
-            <div class="stat-value">$12,456</div>
-            <div class="stat-label">Revenue</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">⭐</div>
-            <div class="stat-value">4.8</div>
-            <div class="stat-label">Rating</div>
-          </div>
+          @for (stat of stats; track stat.label) {
+            <div class="stat-card">
+              <div class="stat-icon">{{ stat.icon }}</div>
+              <div class="stat-value">{{ stat.value }}</div>
+              <div class="stat-label">{{ stat.label }}</div>
+            </div>
+          }
         </div>
       </div>
     </div>
@@ -92,4 +79,11 @@ import { CommonModule } from '@angular/common';
     }
   `]
 })
-export class DashboardComponent {}
+export class DashboardComponent {
+  stats = [
+    { icon: '📈', value: '2,847', label: 'Total Views' },
+    { icon: '👥', value: '1,234', label: 'Active Users' },
+    { icon: '💰', value: '$12,456', label: 'Revenue' },
+    { icon: '⭐', value: '4.8', label: 'Rating' }
+  ];
+}
