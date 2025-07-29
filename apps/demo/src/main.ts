@@ -21,13 +21,15 @@ import { NotificationsComponent } from './app/components/notifications/notificat
       <app-draggable-menu></app-draggable-menu>
     </div>
   `,
-  styles: [`
-    .app-container {
-      width: 100%;
-      height: 100vh;
-      overflow: hidden;
-    }
-  `]
+  styles: [
+    `
+      .app-container {
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+      }
+    `,
+  ],
 })
 export class App {}
 
@@ -39,12 +41,9 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'messages', component: MessagesComponent },
   { path: 'notifications', component: NotificationsComponent },
-  { path: '**', redirectTo: '/home' }
+  { path: '**', redirectTo: '/home' },
 ];
 
 bootstrapApplication(App, {
-  providers: [
-    provideRouter(routes),
-    provideAnimations()
-  ]
+  providers: [provideRouter(routes), provideAnimations()],
 });

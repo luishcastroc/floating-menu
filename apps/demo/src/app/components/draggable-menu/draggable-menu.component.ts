@@ -35,7 +35,7 @@ interface MenuItem {
       (document:touchend)="onTouchEnd($event)"
     >
       <!-- Menu Button -->
-      <div 
+      <div
         class="menu-button"
         (click)="toggleMenu($event)"
         [class.active]="isExpanded()"
@@ -47,34 +47,31 @@ interface MenuItem {
 
       <!-- Menu Items -->
       @if (isExpanded()) {
-        <div class="menu-items">
-          @for (item of menuItems(); track item.route; let i = $index) {
-            <div 
-              class="menu-item"
-              [style.animation-delay.ms]="i * 50"
-              (click)="navigateTo(item.route, $event)"
-            >
-              <div class="menu-icon">{{ item.icon }}</div>
-              <span class="menu-label">{{ item.label }}</span>
-            </div>
-          }
+      <div class="menu-items">
+        @for (item of menuItems(); track item.route; let i = $index) {
+        <div
+          class="menu-item"
+          [style.animation-delay.ms]="i * 50"
+          (click)="navigateTo(item.route, $event)"
+        >
+          <div class="menu-icon">{{ item.icon }}</div>
+          <span class="menu-label">{{ item.label }}</span>
         </div>
+        }
+      </div>
       }
 
       <!-- Backdrop -->
       @if (isExpanded()) {
-        <div 
-          class="menu-backdrop" 
-          (click)="closeMenu()"
-        ></div>
+      <div class="menu-backdrop" (click)="closeMenu()"></div>
       }
     </div>
   `,
-  styleUrls: ['./draggable-menu.component.css']
+  styleUrls: ['./draggable-menu.component.css'],
 })
 export class DraggableMenuComponent {
   private router = inject(Router);
-  
+
   // ViewChild signal
   menuContainer = viewChild.required<ElementRef>('menuContainer');
 
@@ -82,18 +79,18 @@ export class DraggableMenuComponent {
   isExpanded = signal(false);
   isDragging = signal(false);
   position = signal({ x: 20, y: 100 });
-  
+
   private dragStart = { x: 0, y: 0 };
   private clickThreshold = 5; // pixels
   private dragOccurred = false;
-  
+
   menuItems = signal<MenuItem[]>([
     { icon: '🏠', label: 'Home', route: '/home' },
     { icon: '👤', label: 'Profile', route: '/profile' },
     { icon: '⚙️', label: 'Settings', route: '/settings' },
     { icon: '📊', label: 'Dashboard', route: '/dashboard' },
     { icon: '💬', label: 'Messages', route: '/messages' },
-    { icon: '🔔', label: 'Notifications', route: '/notifications' }
+    { icon: '🔔', label: 'Notifications', route: '/notifications' },
   ]);
 
   constructor() {
@@ -110,27 +107,31 @@ export class DraggableMenuComponent {
     const windowHeight = window.innerHeight;
     this.position.set({
       x: windowWidth - 80,
-      y: windowHeight / 2 - 30
+      y: windowHeight / 2 - 30,
     });
   }
 
   startDrag(event: MouseEvent) {
     if (this.isExpanded()) return;
-    
+
     this.isDragging.set(true);
     this.dragOccurred = false;
     this.dragStart.x = event.clientX - this.position().x;
     this.dragStart.y = event.clientY - this.position().y;
-    
+
     event.preventDefault();
   }
 
   onMouseMove(event: MouseEvent) {
     if (!this.isDragging()) return;
 
-    const deltaX = Math.abs(event.clientX - (this.dragStart.x + this.position().x));
-    const deltaY = Math.abs(event.clientY - (this.dragStart.y + this.position().y));
-    
+    const deltaX = Math.abs(
+      event.clientX - (this.dragStart.x + this.position().x)
+    );
+    const deltaY = Math.abs(
+      event.clientY - (this.dragStart.y + this.position().y)
+    );
+
     // Only consider it a drag if moved beyond threshold
     if (deltaX > this.clickThreshold || deltaY > this.clickThreshold) {
       this.dragOccurred = true;
@@ -143,10 +144,16 @@ export class DraggableMenuComponent {
       // Keep menu within viewport bounds
       const menuWidth = 60;
       const menuHeight = 60;
-      
-      const boundedX = Math.max(0, Math.min(window.innerWidth - menuWidth, newX));
-      const boundedY = Math.max(0, Math.min(window.innerHeight - menuHeight, newY));
-      
+
+      const boundedX = Math.max(
+        0,
+        Math.min(window.innerWidth - menuWidth, newX)
+      );
+      const boundedY = Math.max(
+        0,
+        Math.min(window.innerHeight - menuHeight, newY)
+      );
+
       this.position.set({ x: boundedX, y: boundedY });
     }
   }
@@ -158,13 +165,13 @@ export class DraggableMenuComponent {
   // Touch event handlers for mobile support
   startTouchDrag(event: TouchEvent) {
     if (this.isExpanded()) return;
-    
+
     const touch = event.touches[0];
     this.isDragging.set(true);
     this.dragOccurred = false;
     this.dragStart.x = touch.clientX - this.position().x;
     this.dragStart.y = touch.clientY - this.position().y;
-    
+
     event.preventDefault();
   }
 
@@ -172,9 +179,13 @@ export class DraggableMenuComponent {
     if (!this.isDragging()) return;
 
     const touch = event.touches[0];
-    const deltaX = Math.abs(touch.clientX - (this.dragStart.x + this.position().x));
-    const deltaY = Math.abs(touch.clientY - (this.dragStart.y + this.position().y));
-    
+    const deltaX = Math.abs(
+      touch.clientX - (this.dragStart.x + this.position().x)
+    );
+    const deltaY = Math.abs(
+      touch.clientY - (this.dragStart.y + this.position().y)
+    );
+
     // Only consider it a drag if moved beyond threshold
     if (deltaX > this.clickThreshold || deltaY > this.clickThreshold) {
       this.dragOccurred = true;
@@ -187,10 +198,16 @@ export class DraggableMenuComponent {
       // Keep menu within viewport bounds
       const menuWidth = 60;
       const menuHeight = 60;
-      
-      const boundedX = Math.max(0, Math.min(window.innerWidth - menuWidth, newX));
-      const boundedY = Math.max(0, Math.min(window.innerHeight - menuHeight, newY));
-      
+
+      const boundedX = Math.max(
+        0,
+        Math.min(window.innerWidth - menuWidth, newX)
+      );
+      const boundedY = Math.max(
+        0,
+        Math.min(window.innerHeight - menuHeight, newY)
+      );
+
       this.position.set({ x: boundedX, y: boundedY });
     }
   }
@@ -205,14 +222,14 @@ export class DraggableMenuComponent {
       this.dragOccurred = false; // Reset for next interaction
       return;
     }
-    
+
     // Don't toggle if currently dragging
     if (this.isDragging()) {
       return;
     }
-    
+
     event.stopPropagation();
-    this.isExpanded.update(expanded => !expanded);
+    this.isExpanded.update((expanded) => !expanded);
   }
 
   closeMenu() {
